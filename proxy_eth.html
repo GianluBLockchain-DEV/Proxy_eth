@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ottimizzazione degli Smart Contract Proxy</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        color: #333;
+        margin: 0;
+        padding: 0; /* Rimuovi il padding del body */
+        background-color: #cccccc;
+        display: flex; /* Utilizza flexbox per centrare il contenuto */
+        justify-content: center; /* Centra orizzontalmente */
+        align-items: center; /* Centra verticalmente */
+        height: 100vh; /* Altezza della pagina intera */
+      }
+      .background {
+        position: absolute; /* Posiziona in modo assoluto per coprire l'intera pagina */
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex; /* Flexbox per gestire le due immagini */
+      }
+      .left,
+      .right {
+        flex: 1; /* Ogni sezione occupa metà della larghezza */
+        background-size: cover; /* Copre l'intera area */
+      }
+      .left {
+        background-image: url("/public/proxy_img.jpg"); /* Immagine di sfondo sinistra */
+      }
+      .right {
+        background-image: url("/public/proxy_img.jpg"); /* Immagine di sfondo destra */
+      }
+      h1,
+      h2,
+      h3 {
+        color: #3c3c3d;
+      }
+      h1 {
+        text-align: center;
+      }
+      .highlight {
+        color: #627eea;
+        font-weight: bold;
+      }
+      .container {
+        max-width: 800px;
+        margin: auto;
+        background-color: #acbad9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        position: relative; /* Posizione relativa per sovrapporre al background */
+        z-index: 1; /* Porta il contenuto sopra il background */
+      }
+      pre {
+        background-color: #f0f0f0;
+        padding: 10px;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+      @media (max-width: 600px) {
+        body {
+          padding: 10px;
+          height: auto; /* Altezza automatica per schermi piccoli */
+          flex-direction: column; /* Cambia la direzione su schermi piccoli */
+          align-items: flex-start; /* Allinea a sinistra */
+        }
+        .container {
+          padding: 10px;
+          width: 100%; /* Larghezza al 100% su schermi piccoli */
+          box-shadow: none; /* Rimuovi ombra su schermi piccoli */
+          border-radius: 0; /* Rimuovi angoli arrotondati su schermi piccoli */
+          z-index: auto; /* Ripristina z-index su schermi piccoli */
+        }
+      }
+      .signature {
+        margin-top: 40px;
+        text-align: center;
+        font-size: 14px;
+        color: #666;
+      }
+
+      .signature a {
+        color: #627eea;
+        text-decoration: none;
+      }
+
+      .signature a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="background">
+      <div class="left"></div>
+
+      <div class="right"></div>
+    </div>
+    <div class="container">
+      <h1>Ottimizzazione degli Smart Contract Proxy 🚀</h1>
+      <h2>Introduzione 🌟</h2>
+      <p>
+        Quando chiami una funzione di uno smart contract da un altro smart
+        contract, il secondo smart contract può fungere da
+        <span class="highlight">proxy</span>. I contratti proxy sono progettati
+        per agire come intermediari che inoltrano le chiamate a un contratto di
+        implementazione separato, consentendo di mantenere un'interfaccia
+        stabile mentre si apportano aggiornamenti alla logica di
+        implementazione.
+      </p>
+
+      <h2>Funzionamento dei Contratti Proxy 🔍</h2>
+      <h3>Interfaccia e Implementazione 🎯</h3>
+      <ul>
+        <li>
+          Il contratto proxy gestisce le interazioni degli utenti e inoltra le
+          chiamate al contratto di implementazione.
+        </li>
+        <li>
+          Questo consente di aggiornare la logica del contratto senza cambiare
+          l'indirizzo del proxy, il che è vantaggioso per gli utenti che non
+          devono modificare i loro riferimenti al contratto.
+        </li>
+      </ul>
+
+      <h3>Delegazione delle Chiamate 📞</h3>
+      <ul>
+        <li>
+          Quando un utente interagisce con il contratto proxy, il proxy utilizza
+          la funzione <span class="highlight">delegatecall</span> per inoltrare
+          la chiamata al contratto di implementazione.
+        </li>
+        <li>
+          Questo significa che il contesto di esecuzione rimane nel contratto
+          proxy, ma la logica è eseguita nel contratto di implementazione.
+        </li>
+        <li>
+          La funzione <span class="highlight">delegatecall</span> consente di
+          mantenere lo stato del proxy mentre si esegue la logica del contratto
+          di implementazione.
+        </li>
+      </ul>
+
+      <h3>Aggiornamenti 🆙</h3>
+      <ul>
+        <li>
+          Se è necessario aggiornare la logica del contratto, viene distribuito
+          un nuovo contratto di implementazione e il proxy viene aggiornato per
+          puntare a questo nuovo contratto.
+        </li>
+        <li>
+          Questo approccio consente di correggere bug o aggiungere funzionalità
+          senza interrompere il servizio per gli utenti.
+        </li>
+      </ul>
+
+      <h2>Vantaggi dei Contratti Proxy 💡</h2>
+      <h3>Immutabilità 🔒</h3>
+      <ul>
+        <li>
+          Gli smart contract sono immutabili per design, il che significa che il
+          codice non può essere modificato dopo la distribuzione.
+        </li>
+        <li>
+          I contratti proxy consentono di aggirare questo problema mantenendo
+          l'indirizzo del contratto proxy costante mentre si aggiorna la logica
+          sottostante.
+        </li>
+      </ul>
+
+      <h3>Facilità di Aggiornamento 🔄</h3>
+      <ul>
+        <li>
+          Con i contratti proxy, è possibile aggiornare la logica del contratto
+          senza richiedere agli utenti di cambiare l'indirizzo del contratto con
+          cui interagiscono.
+        </li>
+        <li>
+          Questo facilita la gestione delle versioni e migliora la sicurezza.
+        </li>
+      </ul>
+
+      <h2>Considerazioni sul Proxy 🤔</h2>
+      <h3>Separazione della Logica 🧩</h3>
+      <ul>
+        <li>
+          Il proxy è progettato per delegare le chiamate a un contratto di
+          implementazione che contiene la logica del contratto.
+        </li>
+        <li>
+          Questo significa che il proxy stesso non deve contenere la logica, ma
+          solo le funzioni necessarie per inoltrare le chiamate.
+        </li>
+      </ul>
+
+      <h3>Accesso alle Librerie 📚</h3>
+      <ul>
+        <li>
+          Se il contratto di implementazione utilizza le librerie di
+          <a href="https://openzeppelin.com/" target="_blank">OpenZeppelin</a>,
+          queste devono essere importate solo nel contratto di implementazione.
+        </li>
+        <li>
+          Il proxy non deve includere nuovamente queste librerie, poiché non
+          esegue direttamente la logica, ma si limita a inoltrare le chiamate.
+        </li>
+      </ul>
+
+      <h3>Esempio di Importazione 🔖</h3>
+      <pre><code>import "@openzeppelin/contracts/token/ERC20/ERC20.sol";</code></pre>
+      <p>
+        <strong>Nota</strong>: Non è necessario ripetere questa importazione nel
+        contratto proxy.
+      </p>
+
+      <h3>Modello di Proxy 🔗</h3>
+      <p>
+        Quando si utilizza un modello di proxy, come il
+        <a
+          href="https://docs.openzeppelin.com/contracts/4.x/proxy"
+          target="_blank"
+          >Transparent Proxy</a
+        >
+        di OpenZeppelin, il proxy gestisce l'interfaccia e inoltra le chiamate
+        al contratto di implementazione.
+      </p>
+
+      <h2>Conclusione 🎉</h2>
+      <p>
+        In sintesi, i contratti proxy consentono di mantenere un'interfaccia
+        stabile mentre si aggiorna la logica sottostante, offrendo vantaggi come
+        l'immutabilità e la facilità di aggiornamento. Seguendo le best practice
+        per la separazione della logica e l'accesso alle librerie, è possibile
+        implementare in modo efficiente i contratti proxy. 🚀
+      </p>
+      <div class="signature"></div>
+      👨‍💻Autore: Uva Gianluca<br />
+        🌐LinkedIn:
+        <a href="https://www.linkedin.com/in/g-uva-" target="_blank"
+          >check profile!</a
+        ><br />
+        Email for collab.: <a href="mailto:zykappa96@gmail.com">zykappa96@gmail.com</a>
+      </div>
+    </div>
+
+
+    <!-- JavaScript per effetti (esempio: scroll su ancoraggi) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- jQuery Smooth Scroll -->
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $('a[href^="#"]').on("click", function (event) {
+          var target = $(this.getAttribute("href"));
+          if (target.length) {
+            event.preventDefault();
+            $("html, body").stop().animate(
+              {
+                scrollTop: target.offset().top,
+              },
+              1000
+            );
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
